@@ -2,15 +2,6 @@
 
 Welcome to the Bastion SDK Demo App! This app showcases how to integrate Bastion SDK with Particle Auth and connect to the Ethereum blockchain using ethers.js. It also includes an NFT minting demo. Here's everything you need to get started! 🚀
 
-## 📚 Table of Contents
-
-- [Features](#features)
-- [Technologies](#technologies)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-- [Contribute](#contribute)
-- [License](#license)
-
 ## 🎉 Features
 
 - 👤 Web3 authentication
@@ -27,7 +18,7 @@ Welcome to the Bastion SDK Demo App! This app showcases how to integrate Bastion
 - [Ethers.js](https://docs.ethers.io/)
 - [Bastion Wallet SDK](https://github.com/bastion-wallet)
 - [Particle Network](https://particle.network/)
-- TypeScript
+- [TypeScript] (https://www.typescriptlang.org/)
 
 ## 📦 Installation
 
@@ -79,3 +70,4 @@ Feel free to open issues and pull requests!
 ## 📄 License
 
 MIT License. See `LICENSE` for more information.
+
