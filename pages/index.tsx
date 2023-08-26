@@ -68,9 +68,6 @@ export default function Home() {
 			const bastionConnect = await bastion.bastionConnect;
 
 			await bastionConnect.init(tempProvider, {
-				privateKey: "", // Add as needed
-				rpcUrl: "", // Add as needed
-				chainId: 421613,
 				apiKey: process.env.NEXT_PUBLIC_BASTION_API_KEY || "",
 			});
 
