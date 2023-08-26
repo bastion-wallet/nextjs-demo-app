@@ -1,6 +1,4 @@
-// pages/index.tsx
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ethers, Contract } from "ethers";
 import { Bastion } from "bastion-wallet-sdk";
 import { ParticleNetwork } from "@particle-network/auth";
@@ -11,6 +9,44 @@ export default function Home() {
 	const [bastionConnect, setBastionConnect] = useState<any>();
 	const [isMinting, setIsMinting] = useState<boolean>(false);
 	const [userOpHash, setUserOpHash] = useState<string>("");
+
+	useEffect(() => {
+		if (window.ethereum) {
+			window.ethereum.on("accountsChanged", (accounts: string[]) => {
+				setAddress(accounts[0]);
+			});
+		}
+	}, []);
+
+	const loginWithMetamask = async () => {
+		try {
+			// Check if Metamask is installed
+			if (!window.ethereum || !window.ethereum.isMetaMask) {
+				alert("Please install Metamask.");
+				return;
+			}
+
+			// Request account access
+			const accounts = await window.ethereum.request({
+				method: "eth_requestAccounts",
+			});
+
+			setAddress(accounts[0]);
+
+			const tempProvider = new ethers.providers.Web3Provider(window.ethereum, "any");
+
+			const bastion = new Bastion();
+			const bastionConnect = await bastion.bastionConnect;
+
+			await bastionConnect.init(tempProvider, {
+				apiKey: process.env.NEXT_PUBLIC_BASTION_API_KEY || "",
+			});
+
+			setBastionConnect(bastionConnect);
+		} catch (e) {
+			console.error(e);
+		}
+	};
 
 	const loginWithParticleAuth = async () => {
 		try {
@@ -78,6 +114,9 @@ export default function Home() {
 					<h1>Welcome to Bastion!</h1>
 					<button onClick={loginWithParticleAuth} className="rounded-2 bg-gradient-to-r from-[#6C1EB0] to-[#DE389F] mx-4 my-4 px-10 py-4 h-full rounded-xl">
 						Login with Particle Auth
+					</button>
+					<button onClick={loginWithMetamask} className="rounded-2 bg-gradient-to-r from-[#6C1EB0] to-[#DE389F] mx-4 my-4 px-10 py-4 h-full rounded-xl">
+						Login with Metamask
 					</button>
 				</div>
 			)}
