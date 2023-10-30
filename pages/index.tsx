@@ -9,6 +9,7 @@ export default function Home() {
 	const [bastionConnect, setBastionConnect] = useState<any>();
 	const [isMinting, setIsMinting] = useState<boolean>(false);
 	const [userOpHash, setUserOpHash] = useState<string>("");
+	const [smartWalletAddress, setSmartWalletAddress] = useState<string>("");
 
 	useEffect(() => {
 		if (window.ethereum) {
@@ -43,6 +44,7 @@ export default function Home() {
 			});
 
 			setBastionConnect(bastionConnect);
+			setSmartWalletAddress(await bastionConnect.getAddress());
 		} catch (e) {
 			console.error(e);
 		}
@@ -86,6 +88,7 @@ export default function Home() {
 			const nftContract = new Contract(contractAddress, contractABI, bastionConnect);
 
 			const res = await nftContract.safeMint(address);
+			await res.wait();
 			console.log(res);
 			setIsMinting(false);
 			setUserOpHash(res.hash);
@@ -100,6 +103,7 @@ export default function Home() {
 				<div>
 					<h1>Welcome to Bastion!</h1>
 					<h4>Logged in as {address}</h4>
+					<h4>Smart Wallet - {smartWalletAddress}</h4>
 					{isMinting && <h3>Minting...</h3>}
 					{userOpHash && <h3>Minted NFT! User Operation Hash: {userOpHash}</h3>}
 					<button onClick={mintNFT} className="rounded-2 bg-gradient-to-r from-[#6C1EB0] to-[#DE389F] mx-4 my-4 px-10 py-4 h-full rounded-xl">
