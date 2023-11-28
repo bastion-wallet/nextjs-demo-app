@@ -66,8 +66,8 @@ export default function Home() {
         projectId: process.env.NEXT_PUBLIC_PARTICLE_PROJECT_ID as string,
         clientKey: process.env.NEXT_PUBLIC_PARTICLE_CLIENT_KEY as string,
         appId: process.env.NEXT_PUBLIC_PARTICLE_APP_ID as string,
-        chainName: "arbitrum",
-        chainId: 421613,
+        chainName: "polygon",
+        chainId: 80001,
       });
 
       const userInfo = await particle.auth.login();
@@ -76,15 +76,26 @@ export default function Home() {
         particleProvider,
         "any"
       );
-      const address = await tempProvider.getSigner().getAddress();
+      const signer = await tempProvider.getSigner();
+      const address = await signer.getAddress();
       setAddress(address);
 
       const bastion = new Bastion();
       const bastionConnect = await bastion.bastionConnect;
 
-      await bastionConnect.init(tempProvider, {
+      const response = await bastionConnect.init(tempProvider, {
         apiKey: process.env.NEXT_PUBLIC_BASTION_API_KEY || "",
       });
+
+      if (!response.exists) {
+        await bastionConnect.createSmartAccountByDapp();
+      }
+
+      setBastionConnect(bastionConnect);
+      const addressResponse = await bastionConnect.getAddress();
+      // TODO change when BE changes ethers response
+      //   const address = addressResponse?.smartAccountAddress
+      setSmartWalletAddress(addressResponse);
 
       setBastionConnect(bastionConnect);
     } catch (e) {
